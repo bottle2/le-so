@@ -33,21 +33,20 @@ void so_init(so_t self[static 1])
 //            A o código de erro
 static void so_trata_sisop_le(so_t *self)
 {
-  // faz leitura assíncrona.
-  // deveria ser síncrono, verificar es_pronto() e bloquear o processo
-  int disp = self->cpue.A;
+  cpu_estado_t cpue = self->contr.exec.estado;
+  int disp = cpue.A;
   int val;
   err_t err = es_le(&self->contr.es, disp, &val);
-  self->cpue.A = err;
-  if (err == ERR_OK) {
-    self->cpue.X = val;
+  cpue.A = err;
+  if (ERR_OK == err) {
+    cpue.X = val;
   }
   // incrementa o PC
-  self->cpue.PC += 2;
+  cpue.PC += 2;
   // interrupção da cpu foi atendida
-  cpue_muda_erro(&self->cpue, ERR_OK, 0);
+  cpue_muda_erro(&cpue, ERR_OK, 0);
   // altera o estado da CPU (deveria alterar o estado do processo)
-  exec_altera_estado(&self->contr.exec, &self->cpue);
+  self->contr.exec.estado = cpue;
 }
 
 // chamada de sistema para escrita de E/S
@@ -58,16 +57,17 @@ static void so_trata_sisop_escr(so_t *self)
 {
   // faz escrita assíncrona.
   // deveria ser síncrono, verificar es_pronto() e bloquear o processo
-  int disp = self->cpue.A;
-  int val = self->cpue.X;
+  cpu_estado_t cpue = self->contr.exec.estado;
+  int disp = cpue.A;
+  int val = cpue.X;
   err_t err = es_escreve(&self->contr.es, disp, val);
-  self->cpue.A = err;
+  cpue.A = err;
   // interrupção da cpu foi atendida
-  cpue_muda_erro(&self->cpue, ERR_OK, 0);
+  cpue_muda_erro(&cpue, ERR_OK, 0);
   // incrementa o PC
-  self->cpue.PC += 2;
+  cpue.PC += 2;
   // altera o estado da CPU (deveria alterar o estado do processo)
-  exec_altera_estado(&self->contr.exec, &self->cpue);
+  self->contr.exec.estado = cpue;
 }
 
 // chamada de sistema para término do processo
@@ -90,8 +90,7 @@ static void so_trata_sisop_cria(so_t *self)
 static void so_trata_sisop(so_t *self)
 {
   // o tipo de chamada está no "complemento" do cpue
-  exec_copia_estado(&self->contr.exec, &self->cpue);
-  so_chamada_t chamada = self->cpue.complemento;
+  so_chamada_t chamada = self->contr.exec.estado.complemento;
   switch (chamada) {
     case SO_LE:
       so_trata_sisop_le(self);

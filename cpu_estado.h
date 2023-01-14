@@ -16,8 +16,8 @@ typedef struct cpu_estado_t
   int PC;
   int A;
   int X;
-  err_t erro;
-  int complemento;
+  err_t erro;      // Read-only.
+  int complemento; // Read-only.
   cpu_modo_t modo;
 
 } cpu_estado_t;  // estrutura desopaca >:(

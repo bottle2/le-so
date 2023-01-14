@@ -27,8 +27,7 @@ void contr_init(contr_t self[static 1])
 static void str_estado(char *txt, exec_t *exec, mem_t *mem)
 {
   // pega o estado da CPU, imprime registradores, opcode, instrução
-  cpu_estado_t estado = {0};
-  exec_copia_estado(exec, &estado);
+  cpu_estado_t estado = exec->estado;
   int pc, opcode = -1;
   pc = estado.PC;
   mem_le(mem, pc, &opcode);

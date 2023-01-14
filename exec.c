@@ -4,17 +4,6 @@
 #include "exec.h"
 #include "instr.h"
 
-void exec_copia_estado(exec_t *self, cpu_estado_t *estado)
-{
-  *estado = self->estado;
-}
-
-void exec_altera_estado(exec_t *self, cpu_estado_t *estado)
-{
-  self->estado = *estado;
-}
-
-
 // ---------------------------------------------------------------------
 // funções auxiliares para usar durante a execução das instruções
 // alteram o estado da CPU caso ocorra erro

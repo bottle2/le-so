@@ -23,11 +23,6 @@ typedef struct exec_t
 
 } exec_t;
 
-// copia o estado interno da CPU para o local apontado por 'estado'
-void exec_copia_estado(exec_t *exec, cpu_estado_t *estado);
-// altera o estado interno da CPU com o apontado por 'estado'
-void exec_altera_estado(exec_t *exec, cpu_estado_t *estado);
-
 // executa uma instrução
 err_t exec_executa_1(exec_t *exec);
 

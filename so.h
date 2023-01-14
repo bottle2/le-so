@@ -19,7 +19,6 @@ typedef struct so_t
 {
   contr_t contr;
   bool paniquei;        // apareceu alguma situação intratável
-  cpu_estado_t cpue;   // cópia do estado da CPU
   struct procs procs;   // Tabela de processos.
 } so_t;
 
